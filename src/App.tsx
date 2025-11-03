@@ -1,12 +1,17 @@
 // import { useState } from 'react'
-import './App.css'
-import { HomePage } from './pages/HomePage'
+import { Route, Switch } from 'wouter'
+import { HomePage } from './pages/HomePage';
+import { SignInPage } from './pages/SignInPage';
+import { SignUpPage } from './pages/SignUpPage';
 
 function App() {
-
   return (
     <>
-      <HomePage />
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/signin" component={SignInPage} />
+        <Route path="/signup" component={SignUpPage} />
+      </Switch>
     </>
   )
 }

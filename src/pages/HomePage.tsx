@@ -1,23 +1,19 @@
 // import { useState } from 'react'
 
+import { useLocation } from "wouter";
 import { Button } from "../components/ui/Button";
+import { H1 } from "@/components/ui/H1";
 
-
-function handleSignUp(): void {
-    console.log("Sign Up");
-}
-
-function handleSignIn(): void {
-    console.log("Sign In");
-}
 export function HomePage(): React.ReactNode {
+    const [, navigate] = useLocation();
+    
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-3xl font-bold">FinTrack</h1>
+            <H1>FinTrack</H1>
             <p className="text-xl">Track your expenses and income</p>
             <div className="flex flex-row justify-center gap-2 mt-3">
-                <Button onClick={handleSignUp}>Sign Up</Button>
-                <Button variant="secondary" onClick={handleSignIn}>Sign In</Button>
+                <Button onClick={() => navigate("/signup")}>Sign Up</Button>
+                <Button variant="secondary" onClick={() => navigate("/signin")}>Sign In</Button>
             </div>
         </div>
     )
