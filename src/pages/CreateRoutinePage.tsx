@@ -1,15 +1,27 @@
 import { useState } from 'react';
 import { H1 } from '@/components/ui/H1';
-import type { Entry } from '@/models/Entry';
+import { Button } from '@/components/ui/Button';
+import { TextButton } from '@/components/ui/TextButton';
+
+/**
+ * Frontend-only Entry form interface for creating routines
+ * This is separate from the backend Entry model
+ */
+interface FormEntry {
+  name: string;
+  type: 'income' | 'expense';
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  description: string;
+  amount: number;
+}
 
 export function CreateRoutinePage(): React.ReactNode {
   const [routineName, setRoutineName] = useState('');
-  const [entries, setEntries] = useState<Entry[]>([{
+  const [entries, setEntries] = useState<FormEntry[]>([{
     name: '',
     type: 'income',
     frequency: 'monthly',
-    times: 1,
-    category: '',
+    description: '',
     amount: 0
   }]);
 
@@ -18,8 +30,7 @@ export function CreateRoutinePage(): React.ReactNode {
       name: '',
       type: 'income',
       frequency: 'monthly',
-      times: 1,
-      category: '',
+      description: '',
       amount: 0
     }]);
   };
@@ -30,15 +41,15 @@ export function CreateRoutinePage(): React.ReactNode {
     setEntries(newEntries);
   };
 
-  const handleEntryChange = (index: number, field: keyof Entry, value: string | number) => {
+  const handleEntryChange = (index: number, field: keyof FormEntry, value: string | number) => {
     const newEntries = [...entries];
     newEntries[index][field] = value as never;
     setEntries(newEntries);
   };
 
   return (
-    <main className="min-h-screen min-w-screen flex items-center justify-center bg-linear-to-br from-teal-100 to-gray-100">
-      <section className="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl" aria-labelledby="create-heading" role="region">
+    <main className="min-h-screen min-w-screen flex items-center justify-center bg-white">
+      <section className="bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl ring-2 ring-teal-500/20" aria-labelledby="create-heading" role="region">
         <header className="text-center mb-8">
           <H1 id="create-heading">Create Routine</H1>
           <p className="text-gray-600 mt-2">Create a routine to manage your finances</p>
@@ -60,25 +71,26 @@ export function CreateRoutinePage(): React.ReactNode {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-medium text-gray-900">Entries</h2>
-              <button
-                type="button"
+              <TextButton
+                variant="primary"
+                size="small"
                 onClick={addEntry}
-                className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
               >
+                <span className="mr-1">+</span>
                 Add Entry
-              </button>
+              </TextButton>
             </div>
 
             {entries.map((entry, index) => (
               <div key={index} className="p-4 border border-gray-200 rounded-md bg-gray-50">
                 <div className="flex justify-end mb-3">
-                  <button
-                    type="button"
+                  <TextButton
+                    variant="danger"
+                    size="small"
                     onClick={() => removeEntry(index)}
-                    className="text-red-600 hover:text-red-800"
                   >
                     Remove
-                  </button>
+                  </TextButton>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,7 +110,7 @@ export function CreateRoutinePage(): React.ReactNode {
                     <select
                       value={entry.type}
                       onChange={(e) => handleEntryChange(index, 'type', e.target.value)}
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 hover:cursor-pointer"
                     >
                       <option value="income">Income</option>
                       <option value="expense">Expense</option>
@@ -115,28 +127,18 @@ export function CreateRoutinePage(): React.ReactNode {
                       <option value="daily">Daily</option>
                       <option value="weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
+                      <option value="yearly">Yearly</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Times per Frequency</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={entry.times}
-                      onChange={(e) => handleEntryChange(index, 'times', parseInt(e.target.value) || 1)}
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
                     <input
                       type="text"
-                      value={entry.category}
-                      onChange={(e) => handleEntryChange(index, 'category', e.target.value)}
+                      value={entry.description}
+                      onChange={(e) => handleEntryChange(index, 'description', e.target.value)}
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="e.g. Housing, Food"
+                      placeholder="e.g. Monthly salary, Rent payment"
                     />
                   </div>
 
@@ -158,12 +160,13 @@ export function CreateRoutinePage(): React.ReactNode {
           </div>
 
           <div className="flex justify-end">
-            <button
+            <Button
               type="submit"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+              variant="primary"
+              size="default"
             >
               Save Routine
-            </button>
+            </Button>
           </div>
         </form>
       </section>
