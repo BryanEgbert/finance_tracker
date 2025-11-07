@@ -270,14 +270,15 @@ if (user.isValid()) {
 - All buttons include `cursor-pointer` and smooth transitions
 - All buttons include focus ring styling for accessibility
 
-### LinkButton Component
-- Use `<LinkButton>` component from `src/components/ui/LinkButton.tsx` for link-styled buttons
+### TextButton Component
+- Use `<TextButton>` component from `src/components/ui/TextButton.tsx` for text-styled buttons
 - Variants: `primary` (teal text), `secondary` (slate text), `danger` (red text)
 - Sizes: `default` (text-base), `small` (text-sm), `icon` (text-base)
 - Renders as `<a>` element with `role="button"`
 - Prevents default link behavior and calls onClick handler
-- Use for "Add", "Remove", or other action links that need button styling
+- Use for "Add", "Remove", or other action links that need text button styling
 - Always include descriptive text or aria-label
+- Includes cursor-pointer and focus ring styling for accessibility
 
 ---
 
